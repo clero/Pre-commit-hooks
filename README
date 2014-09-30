@@ -6,7 +6,7 @@ canonicalize_filename.sh
    readlink -f with non GNU versions of readlink.
 
 install_hooks.sh:
-    Copy hooks over to your local git repository.
+    Create hooks Symlinks over to your local git repository.
 
 pre-commit:
     Allow to run multiple pre-commit hooks as specified in the script.

@@ -37,7 +37,7 @@ copy_hooks() {
     for hook in $HOOKS
     do
         echo "Copying $hook to $1/hooks."
-        cp -i -- "$SCRIPTPATH/$hook" "$1/hooks"
+        ln -s -i -- "$SCRIPTPATH/$hook" "$1/hooks"
     done
 
     echo ""

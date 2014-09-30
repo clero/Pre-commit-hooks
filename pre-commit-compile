@@ -14,33 +14,43 @@
 # SETTINGS:
 # Path to your makefile
 # MAKEFILE="/home/user/project/src/Makefile"
-MAKEFILE="/home/user/project/src/Makefile"
+
+. "$(dirname -- "$0")/canonicalize_filename.sh"
+
+CMAKEPATH="$(canonicalize_filename)"
 
 # Additional options for the make call. Eg. --quiet to not print any output
 # or -j to make use of multiple cpu cores.
 # OPTIONS="--quiet -j"
-OPTIONS="--quiet"
+OPTIONS="--quiet -j4"
 ###########################################################
 # There should be no need to change anything below this line.
-
-. "$(dirname -- "$0")/canonicalize_filename.sh"
-
 # exit on error
 set -e
 
-MAKEPATH="$(dirname -- "$MAKEFILE")"
-
 echo "Building project."
-if [ -f "$MAKEFILE" ] ; then
-    cd -- "$MAKEPATH"
-    make $OPTIONS -f "$MAKEFILE"
+if [ -f "$CMAKEPATH/CMakeLists.txt" ] ; then
+    cd -- "$CMAKEPATH"
+
+    # Target Build
+    cmake . -DBUILD_DESTINATION=TARGET
+    make $OPTIONS
+    if [ $? != 0 ] ; then
+        echo "Build failure. Aborting commit."
+        exit 1
+    fi
+
+    # Host Build
+    rm CMakeCache.txt
+    cmake .
+    make $OPTIONS
     if [ $? != 0 ] ; then
         echo "Build failure. Aborting commit."
         exit 1
     fi
     echo "Build success."
 else
-    echo "Error: Makefile not found. Aborting commit."
+    echo "Error: CMakeLists not found. Aborting commit."
     echo "Set the correct path in $(canonicalize_filename "$0")."
     echo "Skip pre-commit hooks with --no-verify (not recommended)."
     exit 1
