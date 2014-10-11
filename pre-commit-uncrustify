@@ -17,15 +17,17 @@
 # SETTINGS
 # set path to uncrustify binary
 # UNCRUSTIFY="/usr/bin/uncrustify"
-UNCRUSTIFY="/usr/bin/uncrustify"
+UNCRUSTIFY="$(which uncrustify)"
+
+. "$(dirname -- "$0")/canonicalize_filename.sh"
 
 # set uncrustify config location
 # CONFIG="/home/user/.config/uncrustify.cfg"
-CONFIG="/unspecified/"
+CONFIG="$(canonicalize_filename)tools/uncrustify/uncrustify.cfg"
 
 # the source language: C, CPP, D, CS, JAVA, PAWN, VALA, OC, OC+
 # SOURCE_LANGUAGE="CPP"
-SOURCE_LANGUAGE="OC"
+SOURCE_LANGUAGE="CPP"
 
 # remove any older patches from previous commits. Set to true or false.
 # DELETE_OLD_PATCHES=false
@@ -43,9 +45,6 @@ FILE_EXTS=".c .h .cpp .hpp"
 
 ##################################################################
 # There should be no need to change anything below this line.
-
-. "$(dirname -- "$0")/canonicalize_filename.sh"
-
 # exit on error
 set -e
 
